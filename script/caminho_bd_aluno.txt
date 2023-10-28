@@ -1,0 +1,13 @@
+
+
+
+
+--------------------------------------
+jdbc:h2:Y:\00-JAVA-SEGUNDA-E-QUARTA-TURMA-2023-2\01-Prof.Jorge\projeto_bd\banco\bd_aluno
+
+--------------------------------------
+jdbc:h2:Y:\00-JAVA-SEGUNDA-E-QUARTA-TURMA-2023-2\Gabriela\projeto_bd\banco\bd_aluno
+
+----------------------------------
+jdbc:h2:Y:\00-JAVA-SEGUNDA-E-QUARTA-TURMA-2023-2\yan\projeto_bd\banco\bd_aluno
+
