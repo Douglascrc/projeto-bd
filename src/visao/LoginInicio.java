@@ -8,12 +8,10 @@ import javax.swing.JOptionPane;
 
 public class LoginInicio extends javax.swing.JFrame {
 
-     Connect conec;
+     Connect conec = new Connect();// criar instancia(objeto);
    
     public LoginInicio() {
         initComponents();
-        
-        conec = new Connect();// criar instancia(objeto)
         
         conec.conecta();
         
@@ -166,30 +164,29 @@ public class LoginInicio extends javax.swing.JFrame {
 
     private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
         
-     String user = txt_username.getText();
+    String user = txt_username.getText();
+    String pass = String.valueOf(txt_password.getPassword());
+    boolean loginBemSucedido = false;
      
-     String pass = String.valueOf(txt_password.getPassword());
-     
-
     if(user.trim().equals("") || pass.trim().equals("")){
         JOptionPane.showMessageDialog(null,"Usuário ou senha em branco ");
     }
     try{
-        if((user.trim().equals(conec.rs.getString("username"))) && (pass.trim().equals(conec.rs.getString("password")))){
-        new Aluno().setVisible(true);
+        conec.executeSQL("SELECT * from login");
+        while (conec.rs.next()) {
+            if((user.trim().equals(conec.rs.getString("username"))) && (pass.trim().equals(conec.rs.getString("password")))){
+                loginBemSucedido = true;
+                new Aluno().setVisible(true); // Abra o sistema.
+                break;
+            }
         }
-        else{
-           JOptionPane.showMessageDialog(null,"Login errado ou Senha errado ");
-           dispose();
+        if(!loginBemSucedido) { 
+            JOptionPane.showMessageDialog(null,"Login errado ou Senha errado ");
         }
     }
     catch(SQLException e){
         JOptionPane.showMessageDialog(null,"Não mostrou ");
-        
     }
-    
-  
-   
         
     }//GEN-LAST:event_btn_loginActionPerformed
 

@@ -24,58 +24,47 @@ public class Connect{
         try{
 
         Class.forName(driver);
-
         conn = DriverManager.getConnection("jdbc:h2:.//banco//bd_aluno","sa","");
-        
     
         }
-        
         catch(ClassNotFoundException e){
-
         JOptionPane.showMessageDialog(null,"Driver não localizado " + e);
-
         result = false;
-        }
         
-        catch(SQLException e){
-
-        JOptionPane.showMessageDialog(null,"Erro na Connect         com a fonte " + e);
-
-        result = false;
         }
-         
+        catch(SQLException e){
+        JOptionPane.showMessageDialog(null,"Erro na Connect com a fonte " + e);
+        result = false;
+        
+        } 
         return result;
        
    } // fecha metodo conecta
    
    public void desconecta(){
        
-    boolean result = true;
-    
-        try{
-            
-            rs.close();
-        
+    try {
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "rs não fechou " + e);
         }
-        catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"rs não             fechou "+e);
-            result = false;
+
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "stmt não fechou " + e);
         }
-        
-        try{
-            stmt.close();
-        }
-        catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"stmt não             fechou "+e);
-            result = false;
-        }
-        
-        try{
-            conn.close();
-        }
-        catch(SQLException e){ 
-                JOptionPane.showMessageDialog(null,"conn                 não fechou "+e);
-                result = false;
+
+        try {
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "conn não fechou " + e);
         }
 
     }//desconecta

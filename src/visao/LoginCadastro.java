@@ -10,11 +10,21 @@ import javax.swing.table.DefaultTableModel;
 
 public class LoginCadastro extends javax.swing.JFrame {
   
-   Connect conec;
+   Connect conec = new Connect();
     public LoginCadastro() {
         initComponents();
-        conec = new Connect();
-        conec.conecta();             
+        conec.conecta();      
+        
+        conec.executeSQL("select * from login");
+        try{           
+            conec.rs.first();
+            //mostrarDados();
+        }       
+        catch(SQLException e){
+
+            JOptionPane.showMessageDialog(null,"A tabela esta vazia " + e);
+
+        }
     }
 
    
@@ -189,9 +199,9 @@ public class LoginCadastro extends javax.swing.JFrame {
     private void btn_alterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_alterarActionPerformed
        
         try {
-            String sqlUpdate = "UPDATE login SET " +
-                  "username = '" + txt_usuario.getText() + "', " +
-                  "password = '" + txt_senha.getText() + "'";
+            String sqlUpdate = "UPDATE login SET " +              
+                  "password = '" + txt_senha.getText() + "'" +
+                  "WHERE username = '" + txt_usuario.getText()+ "'";
 
 
                     
@@ -208,38 +218,34 @@ public class LoginCadastro extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_alterarActionPerformed
 
     private void btn_apagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_apagarActionPerformed
-         try{
-    
-            String sqlDeletar = "DELETE FROM LOGIN WHERE username = '" + txt_usuario.getText() + "'";
+         
+      String usuario = txt_usuario.getText();
+        
+       if (!usuario.isEmpty()) {
+       String nome = "Deletar o usuário: " + usuario + "?";
+       int opcaoEscolhida = JOptionPane.showConfirmDialog(null, nome, "EXCLUSÃO", JOptionPane.YES_NO_OPTION);
 
-            conec.executeSQL(sqlDeletar);
-            conec.rs.first();
-
-            String nome = "Deletar o usuario: " +conec.rs.getString("usuario")+"?";
-            int opcaoescolhida = JOptionPane.showConfirmDialog(null, nome, "EXCLUSÃO",JOptionPane.YES_NO_OPTION);
-
-            if (opcaoescolhida == JOptionPane.YES_NO_OPTION){
-                sqlDeletar = "DELETE from login where username='" + txt_usuario.getText() + "'";
-
-
-                int conseguiuexcluir = conec.stmt.executeUpdate(sqlDeletar);
-
-                if (conseguiuexcluir == 1){
-                    JOptionPane.showMessageDialog(null,"Exclusão realizada com sucesso");
-
-                    //atualiza ResultSet
-                    conec.executeSQL("select * from aluno");
-                    conec.rs.first();
-                   
-                }
+        if (opcaoEscolhida == JOptionPane.YES_NO_OPTION){                
+            try {
+                
+                String sqlDeletar = "DELETE from login where username='" + txt_usuario.getText() + "'" + 
+                      "AND password='" + txt_senha.getText() + "'" ;
+                int conseguiuExcluir = conec.stmt.executeUpdate(sqlDeletar);
+                    if (conseguiuExcluir == 1) {
+                    JOptionPane.showMessageDialog(null, "Exclusão realizada com sucesso");
+                    // Atualiza o ResultSet
+                    conec.executeSQL("SELECT * FROM login");
+                    conec.rs.first();           
+                } else {
+                     JOptionPane.showMessageDialog(null, "Não foi possível excluir o usuário.");
+                  }
+            } catch(SQLException e) {
+                JOptionPane.showMessageDialog(null, "Erro ao tentar excluir " + e);
             }
-            else{
-                return;
-            }
+          } else {
+                JOptionPane.showMessageDialog(null, "Nenhum nome de usuário fornecido para exclusão.");          
         }
-        catch(SQLException e){
-            JOptionPane.showMessageDialog(null,"Erro ao tentar excluir "+e);
-        }                                                                    
+      }
     }//GEN-LAST:event_btn_apagarActionPerformed
 
     
